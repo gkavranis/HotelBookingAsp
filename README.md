@@ -13,7 +13,6 @@ A hotel booking management system built with ASP.NET Core, following Clean Archi
 - [Project Structure](#project-structure)
 - [API Documentation](#api-documentation)
 - [Future Features](#future-features)
-- [Contributing](#contributing)
 
 ## ✨ Features
 
