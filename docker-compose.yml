@@ -1,0 +1,42 @@
+services:
+  hotelbooking.api:
+    image: ${DOCKER_REGISTRY-}hotelbookingapi
+    ports:
+      - "8080:8080"
+    networks:
+      - hotelnet
+    # depends_on:
+    #   sqlserver.data:
+    #     condition: service_healthy
+    build:
+      context: .
+      dockerfile: HotelBooking.API/Dockerfile
+
+
+  sqlserver.data:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver.data
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "attemptStrongP@ssw0rd"
+      MSSQL_INSTANCE_NAME: "MSSQLSERVER2022"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+    networks:
+      - hotelnet
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "attemptStrongP@ssw0rd" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+
+networks:
+  hotelnet:
+    driver: bridge
+
+volumes:
+  sqlserverdata:
