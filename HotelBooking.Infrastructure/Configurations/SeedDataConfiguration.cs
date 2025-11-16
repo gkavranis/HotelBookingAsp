@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 internal static class SeedDataConfiguration
 {
-    public static void SeedData(this ModelBuilder modelBuilder)
+    public static ModelBuilder SeedData(this ModelBuilder modelBuilder)
     {
         var hotel1Id = Guid.Parse("11111111-1111-1111-1111-111111111111");
         var hotel2Id = Guid.Parse("22222222-2222-2222-2222-222222222222");
@@ -59,7 +59,7 @@ internal static class SeedDataConfiguration
                 RoomId = room1Id
             },
             new BookingDBEntity
-            {                    
+            {
                 Id = Guid.Parse("0dcbc9c6-c37e-4ac6-bc3f-9aed741cbda7"),
                 CreationDate = new DateTime(2025, 11, 3),
                 StartingDate = new DateTime(2025, 11, 13),
@@ -68,5 +68,7 @@ internal static class SeedDataConfiguration
             }
 
         );
+
+        return modelBuilder;
     }
 }
