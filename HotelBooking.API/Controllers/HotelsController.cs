@@ -32,14 +32,14 @@ public class HotelsController : ControllerBase
     /// Supports wildcard matching to find hotels containing the specified name.
     /// </summary>
     /// <param name="name">The name or wildcard pattern of the hotel to search for.</param>
+    /// <param name="token">Optional cancellation token to cancel the operation.</param>
     [HttpGet("by-name/{name}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByNameAsync(string name)
+    public async Task<IActionResult> GetByNameAsync(string name, CancellationToken token)
     {
-        
-        var hotels = await _hotelService.GetByNameAsync(name);
+        var hotels = await _hotelService.GetByNameAsync(name, token);
 
         return Ok(_mapper.Map<IEnumerable<GetHotelResponse>>(hotels));
     }

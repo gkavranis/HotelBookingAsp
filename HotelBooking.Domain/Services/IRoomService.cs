@@ -16,12 +16,14 @@ public interface IRoomService
     /// Validates the query parameters and filters rooms that are not booked during the specified period.
     /// </summary>
     /// <param name="roomQuery">Query object containing hotel ID, date range, and guest capacity requirements.</param>
+    /// <param name="token">Optional cancellation token to cancel the operation.</param>
     /// <exception cref="ValidationException">Thrown when the room query validation fails.</exception>
-    Task<IEnumerable<Room>> GetAvailableRooms(RoomQuery roomQuery);
+    Task<IEnumerable<Room>> GetAvailableRooms(RoomQuery roomQuery, CancellationToken token = default);
 
     /// <summary>
     /// Validates whether a room with the specified identifier exists in the system.
     /// </summary>
     /// <param name="id">The unique identifier of the room to validate.</param>
-    Task<bool> ValidateIdAsync(Guid id);
+    /// <param name="token">Optional cancellation token to cancel the operation.</param>
+    Task<bool> ValidateIdAsync(Guid id, CancellationToken token = default);
 }

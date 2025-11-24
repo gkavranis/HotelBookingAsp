@@ -19,14 +19,14 @@ internal class DataRepository : IDataRepository
     }
 
     /// <inheritdoc/>
-    public async Task DeleteDatabaseAsync()
+    public async Task DeleteDatabaseAsync(CancellationToken token = default)
     {
-        await _dbContext.Database.EnsureDeletedAsync();
+        await _dbContext.Database.EnsureDeletedAsync(token);
     }
 
     /// <inheritdoc/>
-    public async Task RunMigrationsAsync()
+    public async Task RunMigrationsAsync(CancellationToken token = default)
     {
-        await _dbContext.Database.MigrateAsync();
+        await _dbContext.Database.MigrateAsync(cancellationToken: token);
     }
 }
