@@ -19,18 +19,18 @@ internal class HotelRepository : IHotelRepository
     }
 
     /// <inheritdoc/>
-    public async Task<Hotel> GetByIdAsync(Guid id)
+    public async Task<Hotel> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         return _mapper.Map<Hotel>(
             await _dbContext.Hotels
             .Include(h => h.Rooms)
-            .FirstOrDefaultAsync(x => x.Id == id));
+            .FirstOrDefaultAsync(x => x.Id == id, token));
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<Hotel>> GetByNameAsync(string name)
+    public async Task<IEnumerable<Hotel>> GetByNameAsync(string name, CancellationToken token = default)
     {
-        var hotelEntities = await _dbContext.Hotels.Include(r=> r.Rooms).Where(h => EF.Functions.Like(h.Name, $"%{name}%")).ToListAsync();
+        var hotelEntities = await _dbContext.Hotels.Include(r=> r.Rooms).Where(h => EF.Functions.Like(h.Name, $"%{name}%")).ToListAsync(token);
         return _mapper.Map<IEnumerable<Hotel>>(hotelEntities);
     }
 }

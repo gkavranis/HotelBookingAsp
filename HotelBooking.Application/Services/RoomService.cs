@@ -26,21 +26,13 @@ public class RoomService : IRoomService
         _roomQueryValidator = roomQueryValidator;
     }
 
-    /// <summary>
-    /// Retrieves available rooms based on hotel, date range, and guest capacity criteria.
-    /// Validates the query parameters before executing the search.
-    /// </summary>
-    /// <param name="roomQuery">Query object containing hotel ID, date range, and number of guests.</param>
-    /// <exception cref="ValidationException">Thrown when the room query validation fails.</exception>
-    public Task<IEnumerable<Room>> GetAvailableRooms(RoomQuery roomQuery)
+    /// <inheritdoc/>
+    public async Task<IEnumerable<Room>> GetAvailableRooms(RoomQuery roomQuery, CancellationToken token = default)
     {
-        _roomQueryValidator.ValidateAndThrow(roomQuery);
-        return  _roomRepository.GetAvailableRoomAsync(roomQuery);
+        await _roomQueryValidator.ValidateAndThrowAsync(roomQuery, token);
+        return await _roomRepository.GetAvailableRoomAsync(roomQuery, token);
     }
 
-    /// <summary>
-    /// Validates whether a room with the specified identifier exists in the system.
-    /// </summary>
-    /// <param name="id">The unique identifier of the room to validate.</param>
-    public Task<bool> ValidateIdAsync(Guid id) => _roomRepository.ExistsAsync(id);
+    /// <inheritdoc/>
+    public Task<bool> ValidateIdAsync(Guid id, CancellationToken token = default) => _roomRepository.ExistsAsync(id, token);
 }

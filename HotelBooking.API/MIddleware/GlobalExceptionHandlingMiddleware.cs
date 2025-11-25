@@ -1,5 +1,7 @@
 ﻿namespace HotelBooking.Api.Middleware
 {
+    using System;
+
     /// <summary>
     /// Middleware for handling unhandled exceptions globally across the application.
     /// Logs exceptions and returns a standardized 500 Internal Server Error response.
@@ -32,10 +34,31 @@
             {
                 await _next(context);
             }
-            catch (Exception ex)
+            catch(OperationCanceledException cancellationException)
             {
-                _logger.LogError("Unhandled exception: {message}", ex);
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                _logger.LogWarning(cancellationException, "Request was cancelled: {Message}", cancellationException.Message);
+                if (!context.Response.HasStarted)
+                {
+                    context.Response.StatusCode = StatusCodes.Status499ClientClosedRequest;
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, "Unhandled exception: {Message}", exception.Message);
+
+                if (!context.Response.HasStarted)
+                {
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    context.Response.ContentType = "application/json";
+
+                    var errorResponse = new
+                    {
+                        StatusCode = StatusCodes.Status500InternalServerError,
+                        Message = "An internal server error occurred."
+                    };
+
+                    await context.Response.WriteAsJsonAsync(errorResponse);
+                }
             }
         }
     }

@@ -16,22 +16,25 @@ public interface IHotelService
     /// Validates the ID before querying and includes associated room information in the result.
     /// </summary>
     /// <param name="id">The unique identifier of the hotel to retrieve.</param>
+    /// <param name="token">Optional cancellation token to cancel the operation.</param>
     /// <exception cref="ArgumentException">Thrown when the ID is empty.</exception>
     /// <exception cref="KeyNotFoundException">Thrown when no hotel with the specified ID exists.</exception>
-    Task<Hotel> GetByIdAsync(Guid id);
+    Task<Hotel> GetByIdAsync(Guid id, CancellationToken token = default);
 
     /// <summary>
     /// Retrieves hotels by name using case-insensitive partial matching.
     /// Searches for hotels whose names contain the specified search term.
     /// </summary>
     /// <param name="name">The name or partial name of the hotel to search for.</param>
+    /// <param name="token">Optional cancellation token to cancel the operation.</param>
     /// <exception cref="ValidationException">Thrown when the name validation fails.</exception>
-    Task<IEnumerable<Hotel>> GetByNameAsync(string name);
+    Task<IEnumerable<Hotel>> GetByNameAsync(string name, CancellationToken token = default);
 
     /// <summary>
     /// Validates that a hotel identifier is not empty.
     /// </summary>
     /// <param name="id">The hotel ID to validate.</param>
+    /// <param name="token">Optional cancellation token to cancel the operation.</param>
     /// <exception cref="ArgumentException">Thrown when the ID is empty.</exception>
-    Task ValidateIdAsync(Guid id);
+    Task ValidateIdAsync(Guid id, CancellationToken token = default);
 }

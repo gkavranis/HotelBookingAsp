@@ -22,7 +22,7 @@ internal class RoomRepository : IRoomRepository
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<Room>> GetAvailableRoomAsync(RoomQuery roomQuery)
+    public async Task<IEnumerable<Room>> GetAvailableRoomAsync(RoomQuery roomQuery, CancellationToken token = default)
     {
         var requestedFromDate = roomQuery.FromDate;
         var requestedToDate = roomQuery.ToDate;
@@ -32,12 +32,12 @@ internal class RoomRepository : IRoomRepository
             .Where(r => r.HotelId == roomQuery.HotelId)
             .Where(r => r.Capacity >= roomQuery.Guests)
             .Where(r => !r.Bookings.Any(b => b.StartingDate < requestedToDate && b.EndingDate > requestedFromDate))
-            .ToListAsync();
+            .ToListAsync(cancellationToken: token);
 
         return _mapper.Map<IEnumerable<Room>>(rooms);
     }
 
     /// <inheritdoc/>
-    public Task<bool> ExistsAsync(Guid id) =>
-            _dbContext.Rooms.AnyAsync(room => room.Id == id);
+    public Task<bool> ExistsAsync(Guid id, CancellationToken token = default) =>
+            _dbContext.Rooms.AnyAsync(room => room.Id == id, token);
 }
