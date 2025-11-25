@@ -21,31 +21,22 @@ public class DataService : IDataService
         _dataRepository = dataRepository;
     }
 
-    /// <summary>
-    /// Resets and seeds the database in a single operation.
-    /// First removes all existing data, then applies migrations and populates with seed data.
-    /// </summary>
-    public async Task ResetAndSeedDatabaseAsync()
+    /// <inheritdoc/>
+    public async Task ResetAndSeedDatabaseAsync(CancellationToken token = default)
     {
-        await ResetDatabaseAsync();
-        await SeedDatabaseAsync();
+        await ResetDatabaseAsync(token);
+        await SeedDatabaseAsync(token);
     }
 
-    /// <summary>
-    /// Resets the database by removing all data from tables.
-    /// Deletes the database entirely to ensure a clean state.
-    /// </summary>
-    public async Task ResetDatabaseAsync()
+    /// <inheritdoc/>
+    public async Task ResetDatabaseAsync(CancellationToken token = default)
     {
-        await _dataRepository.DeleteDatabaseAsync();
+        await _dataRepository.DeleteDatabaseAsync(token);
     }
 
-    /// <summary>
-    /// Seeds the database with test data.
-    /// Applies any pending migrations and populates tables with predefined data.
-    /// </summary>
-    public async Task SeedDatabaseAsync()
+    /// <inheritdoc/>
+    public async Task SeedDatabaseAsync(CancellationToken token = default)
     {
-        await _dataRepository.RunMigrationsAsync();
+        await _dataRepository.RunMigrationsAsync(token);
     }
 }

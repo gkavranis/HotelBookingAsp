@@ -29,6 +29,7 @@ public class ValidationMappingMiddleware
     /// Catches FluentValidation exceptions and returns a formatted validation error response.
     /// </summary>
     /// <param name="context">The HTTP context for the current request.</param>
+    /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
     public async Task InvokeAsync(HttpContext context)
     {
         try

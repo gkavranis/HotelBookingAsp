@@ -34,14 +34,15 @@ public class RoomsController : ControllerBase
     /// Searches for rooms that are not booked during the specified period and can accommodate the requested number of guests.
     /// </summary>
     /// <param name="request">The query parameters containing hotel ID, date range (ISO 8601 format), and number of guests.</param>
+    /// <param name="token">Optional cancellation token to cancel the operation.</param>
     [HttpGet("available")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationFailureResponse), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetAvailableRoomsAsync([FromQuery] GetAvailableRoomsRequest request)
+    public async Task<IActionResult> GetAvailableRoomsAsync([FromQuery] GetAvailableRoomsRequest request, CancellationToken token)
     {
         var roomQuery = _mapper.Map<RoomQuery>(request);
 
-        var availableRooms = await _roomService.GetAvailableRooms(roomQuery);
+        var availableRooms = await _roomService.GetAvailableRooms(roomQuery, token);
         return Ok(_mapper.Map<IEnumerable<GetAvailableRoomsResponse>>(availableRooms));
     }
 }

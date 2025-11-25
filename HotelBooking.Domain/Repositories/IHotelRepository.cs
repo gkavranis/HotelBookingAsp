@@ -12,12 +12,14 @@ public interface IHotelRepository
     /// Includes associated room information in the result.
     /// </summary>
     /// <param name="id">The unique identifier of the hotel to retrieve.</param>
-    Task<Hotel> GetByIdAsync(Guid id);
+    /// <param name="token">Optional cancellation token to cancel the operation.</param>
+    Task<Hotel> GetByIdAsync(Guid id, CancellationToken token = default);
 
     /// <summary>
     /// Retrieves hotels by name using case-insensitive partial matching.
     /// Searches for hotels whose names contain the specified search term.
     /// </summary>
     /// <param name="name">The name or partial name of the hotel to search for.</param>
-    Task<IEnumerable<Hotel>> GetByNameAsync(string name);
+    /// <param name="token">Optional cancellation token to cancel the operation.</param>
+    Task<IEnumerable<Hotel>> GetByNameAsync(string name, CancellationToken token = default);
 }

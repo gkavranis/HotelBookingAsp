@@ -20,21 +20,24 @@ public class BookingService : IBookingService
         _validator = validator;
     }
 
-    public async Task<Booking?> AddAsync(Booking booking)
+    /// <inheritdoc/>
+    public async Task<Booking?> AddAsync(Booking booking, CancellationToken token = default)
     {
-        await _validator.ValidateAndThrowAsync(booking);
+        await _validator.ValidateAndThrowAsync(booking, token);
 
-        return await _bookingRepository.AddAsync(booking);
+        return await _bookingRepository.AddAsync(booking, token);
     }
 
-    public async Task<Booking?> GetByIdAsync(Guid id)
+    /// <inheritdoc/>
+    public async Task<Booking?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        return await _bookingRepository.GetByIdAsync(id);
+        return await _bookingRepository.GetByIdAsync(id, token);
     }
 
-    public async Task<bool> IsRoomAvailableAsync(Guid roomId, DateTime fromDate, DateTime toDate)
+    /// <inheritdoc/>
+    public async Task<bool> IsRoomAvailableAsync(Guid roomId, DateTime fromDate, DateTime toDate, CancellationToken token = default)
     {
-        await _roomService.ValidateIdAsync(roomId);
-        return await _bookingRepository.IsRoomAvailableAsync(roomId, fromDate, toDate);
+        await _roomService.ValidateIdAsync(roomId, token);
+        return await _bookingRepository.IsRoomAvailableAsync(roomId, fromDate, toDate, token);
     }
 }

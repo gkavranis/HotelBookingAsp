@@ -28,7 +28,7 @@ public class BookingValidator : AbstractValidator<Booking>
         RuleFor(x => x.Room.Id)
             .NotEmpty()
             .WithMessage("Room ID is required.")
-            .MustAsync(async (roomId, _) => await roomService.ValidateIdAsync(roomId))
+            .MustAsync(async (roomId, token) => await roomService.ValidateIdAsync(roomId, token))
             .WithMessage("Room with the given ID does not exist.")
             .When(x => x.Room != null);
 
@@ -40,8 +40,8 @@ public class BookingValidator : AbstractValidator<Booking>
 
         // Check room availability
         RuleFor(booking => booking)
-                .MustAsync(async (booking, _) => await bookingRepository.IsRoomAvailableAsync(
-                        booking.Room.Id, booking.StartingDate, booking.EndingDate))
+                .MustAsync(async (booking, token) => await bookingRepository.IsRoomAvailableAsync(
+                        booking.Room.Id, booking.StartingDate, booking.EndingDate, token))
                 .WithMessage("The room is already booked in the given interval.")
                 .WithName("Booking");
     }
